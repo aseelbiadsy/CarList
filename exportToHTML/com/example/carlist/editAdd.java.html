@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>editAdd.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #6a8759;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+editAdd.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.carlist</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.annotation.Nullable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Bitmap</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.drawable.BitmapDrawable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.EditText</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.ImageView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.io.ByteArrayOutputStream</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">editAdd </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+
+    <span class="s1">Button takePhoto</span><span class="s0">,</span><span class="s1">btnSave</span><span class="s0">,</span><span class="s1">btnCancel</span><span class="s0">;</span>
+    <span class="s1">EditText model</span><span class="s0">,</span><span class="s1">passenger</span><span class="s0">,</span><span class="s1">color</span><span class="s0">,</span><span class="s1">speed</span><span class="s0">;</span>
+    <span class="s1">ImageView imAdd</span><span class="s0">;</span>
+    <span class="s0">private static final int </span><span class="s1">REQUEST_IMAGE_CAPTURE =</span><span class="s2">27</span><span class="s0">;</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onActivityResult(</span><span class="s0">int </span><span class="s1">requestCode</span><span class="s0">, int </span><span class="s1">resultCode</span><span class="s0">, </span><span class="s1">@Nullable Intent data) {</span>
+        <span class="s0">super</span><span class="s1">.onActivityResult(requestCode</span><span class="s0">, </span><span class="s1">resultCode</span><span class="s0">, </span><span class="s1">data)</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(requestCode== REQUEST_IMAGE_CAPTURE)</span>
+        <span class="s1">{</span>
+            <span class="s0">if</span><span class="s1">(resultCode ==RESULT_OK)</span>
+            <span class="s1">{</span>
+                <span class="s1">Bitmap imageBitMap=(Bitmap) data.getExtras().get(</span><span class="s3">&quot;data&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">imAdd.setImageBitmap(imageBitMap)</span><span class="s0">;</span>
+                <span class="s1">Toast.makeText(</span><span class="s0">this, </span><span class="s3">&quot;your are beautiful&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_edit_add)</span><span class="s0">;</span>
+        <span class="s1">init()</span><span class="s0">;</span>
+        <span class="s1">btnSave.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Intent go=</span><span class="s0">new </span><span class="s1">Intent(editAdd.</span><span class="s0">this,</span><span class="s1">MainActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s4">// Put the captured image data as an extra in the Intent</span>
+                <span class="s1">BitmapDrawable drawable = (BitmapDrawable) imAdd.getDrawable()</span><span class="s0">;</span>
+                <span class="s1">Bitmap bitmap = drawable.getBitmap()</span><span class="s0">;</span>
+                <span class="s1">ByteArrayOutputStream baos = </span><span class="s0">new </span><span class="s1">ByteArrayOutputStream()</span><span class="s0">;</span>
+                <span class="s1">bitmap.compress(Bitmap.CompressFormat.JPEG</span><span class="s0">, </span><span class="s2">100</span><span class="s0">, </span><span class="s1">baos)</span><span class="s0">;</span>
+                <span class="s0">byte</span><span class="s1">[] byteArray = baos.toByteArray()</span><span class="s0">;</span>
+
+                <span class="s4">// Put the other data as extras in the Intent</span>
+                <span class="s1">String mod = model.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">String pas = passenger.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">String col = color.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">String spe = speed.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s3">&quot;mod&quot;</span><span class="s0">, </span><span class="s1">mod)</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s3">&quot;pas&quot;</span><span class="s0">, </span><span class="s1">pas)</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s3">&quot;col&quot;</span><span class="s0">, </span><span class="s1">col)</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s3">&quot;spe&quot;</span><span class="s0">, </span><span class="s1">spe)</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s3">&quot;image&quot;</span><span class="s0">, </span><span class="s1">byteArray)</span><span class="s0">;</span>
+
+                <span class="s4">// Start the MainActivity with the Intent</span>
+                <span class="s1">startActivity(go)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">init()</span>
+    <span class="s1">{</span>
+        <span class="s1">takePhoto = findViewById(R.id.takePhoto)</span><span class="s0">;</span>
+        <span class="s1">btnSave = findViewById(R.id.btnSave)</span><span class="s0">;</span>
+        <span class="s1">btnCancel = findViewById(R.id.btnCancel)</span><span class="s0">;</span>
+        <span class="s1">model=findViewById(R.id.model)</span><span class="s0">;</span>
+        <span class="s1">passenger=findViewById(R.id.passenger)</span><span class="s0">;</span>
+        <span class="s1">color=findViewById(R.id.color)</span><span class="s0">;</span>
+        <span class="s1">speed=findViewById(R.id.speed)</span><span class="s0">;</span>
+        <span class="s1">imAdd=findViewById(R.id.imAdd)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #808080;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.carlist</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.activity.result.contract.ActivityResultContracts</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.annotation.Nullable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AlertDialog</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.Bitmap</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.graphics.BitmapFactory</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.AdapterView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.ImageButton</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.ListView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+
+
+<span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity  {</span>
+    <span class="s0">private </span><span class="s1">ArrayList&lt;Car&gt; list</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">ListView lvCustom</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">CarAdapter adapter</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">ImageButton imAdd</span><span class="s0">;</span>
+    <span class="s0">public  </span><span class="s1">Car lastselected</span><span class="s0">;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_main)</span><span class="s0">;</span>
+
+        <span class="s1">initViews()</span><span class="s0">;</span>
+        <span class="s1">initList()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onActivityResult(</span><span class="s0">int </span><span class="s1">requestCode</span><span class="s0">, int </span><span class="s1">resultCode</span><span class="s0">, </span><span class="s1">@Nullable Intent data) {</span>
+        <span class="s0">super</span><span class="s1">.onActivityResult(requestCode</span><span class="s0">, </span><span class="s1">resultCode</span><span class="s0">, </span><span class="s1">data)</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(requestCode==</span><span class="s2">27</span><span class="s1">)</span><span class="s3">//update</span>
+        <span class="s1">{</span>
+            <span class="s0">if </span><span class="s1">(resultCode==RESULT_OK)</span>
+            <span class="s1">{</span>
+                <span class="s1">String m=data.getExtras().getString(</span><span class="s4">&quot;model&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">String p=data.getExtras().getString(</span><span class="s4">&quot;passenger&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">String c=data.getExtras().getString(</span><span class="s4">&quot;color&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">Bitmap bitmap=Helper.byteArrayToBitmap(data.getExtras().getByteArray(</span><span class="s4">&quot;bitmap&quot;</span><span class="s1">))</span><span class="s0">;</span>
+                <span class="s1">String s=data.getExtras().getString(</span><span class="s4">&quot;speed&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+                <span class="s1">lastselected.setModel(m)</span><span class="s0">;</span>
+                <span class="s1">lastselected.setPassengers(Integer.valueOf(p))</span><span class="s0">;</span>
+                <span class="s1">lastselected.setColor(c)</span><span class="s0">;</span>
+                <span class="s1">lastselected.setBitmap(bitmap)</span><span class="s0">;</span>
+                <span class="s1">lastselected.setSpeed(Integer.valueOf(s))</span><span class="s0">;</span>
+
+                <span class="s1">adapter.notifyDataSetChanged()</span><span class="s0">;</span>
+                <span class="s1">Toast.makeText(</span><span class="s0">this, </span><span class="s4">&quot;data saved&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">initViews() {</span>
+        <span class="s1">imAdd = findViewById(R.id.imAdd)</span><span class="s0">;</span>
+        <span class="s1">lvCustom = (ListView) findViewById(R.id.lvCustom)</span><span class="s0">;</span>
+
+        <span class="s1">imAdd.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Toast.makeText(MainActivity.</span><span class="s0">this, </span><span class="s4">&quot;hhhhh&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                <span class="s1">Intent goo=</span><span class="s0">new </span><span class="s1">Intent(MainActivity.</span><span class="s0">this,</span><span class="s1">EditAddd.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">startActivityForResult(goo</span><span class="s0">,</span><span class="s2">29</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">lvCustom.setOnItemClickListener(</span><span class="s0">new </span><span class="s1">AdapterView.OnItemClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onItemClick(AdapterView&lt;?&gt; parent</span><span class="s0">, </span><span class="s1">View view</span><span class="s0">, int </span><span class="s1">position</span><span class="s0">, long </span><span class="s1">id) {</span>
+                <span class="s1">lastselected=adapter.getItem(position)</span><span class="s0">;</span>
+                <span class="s1">Intent go=</span><span class="s0">new </span><span class="s1">Intent(MainActivity.</span><span class="s0">this,</span><span class="s1">EditAddd.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s4">&quot;model&quot;</span><span class="s0">,</span><span class="s1">lastselected.getModel())</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s4">&quot;passenger&quot;</span><span class="s0">,</span><span class="s1">String.valueOf(lastselected.getPassengers()))</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s4">&quot;speed&quot;</span><span class="s0">,</span><span class="s1">String.valueOf(lastselected.getSpeed()))</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s4">&quot;color&quot;</span><span class="s0">,</span><span class="s1">lastselected.getColor())</span><span class="s0">;</span>
+                <span class="s1">go.putExtra(</span><span class="s4">&quot;bitmap&quot;</span><span class="s0">,</span><span class="s1">Helper.bitmapToArray(lastselected.getBitmap()))</span><span class="s0">;</span>
+                <span class="s1">startActivityForResult(go</span><span class="s0">,</span><span class="s2">27</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+
+        <span class="s1">lvCustom.setOnItemLongClickListener(</span><span class="s0">new </span><span class="s1">AdapterView.OnItemLongClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public boolean </span><span class="s1">onItemLongClick(AdapterView&lt;?&gt; parent</span><span class="s0">, </span><span class="s1">View view</span><span class="s0">, int </span><span class="s1">position</span><span class="s0">, long </span><span class="s1">id) {</span>
+                <span class="s1">Car cars = adapter.getItem(position)</span><span class="s0">;</span>
+                <span class="s1">AlertDialog.Builder alertDialog = </span><span class="s0">new </span><span class="s1">AlertDialog.Builder(MainActivity.</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">alertDialog.setTitle(</span><span class="s4">&quot;remove&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">alertDialog.setMessage(</span><span class="s4">&quot;Are you sure want delete?&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">alertDialog.setIcon(R.drawable.ic_baseline_delete_24)</span><span class="s0">;</span>
+                <span class="s1">alertDialog.setCancelable(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">alertDialog.setPositiveButton(</span><span class="s4">&quot;yes&quot;</span><span class="s0">,</span><span class="s1">(dialog</span><span class="s0">, </span><span class="s1">which) -&gt; {</span>
+                    <span class="s1">adapter.remove(adapter.getItem(position))</span><span class="s0">;</span>
+                    <span class="s1">adapter.notifyDataSetChanged()</span><span class="s0">;</span>
+                    <span class="s1">dialog.dismiss()</span><span class="s0">;</span>
+                <span class="s1">})</span><span class="s0">;</span>
+                <span class="s1">alertDialog.setNegativeButton(</span><span class="s4">&quot;no&quot;</span><span class="s0">,</span><span class="s1">(dialog</span><span class="s0">, </span><span class="s1">which) -&gt; {</span>
+                    <span class="s1">dialog.dismiss()</span><span class="s0">;</span>
+                <span class="s1">})</span><span class="s0">;</span>
+                <span class="s1">AlertDialog dialog=alertDialog.create()</span><span class="s0">;</span>
+                <span class="s1">dialog.show()</span><span class="s0">;</span>
+                <span class="s0">return true;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">initList() {</span>
+
+        <span class="s1">Bitmap bmw= BitmapFactory.decodeResource(getResources()</span><span class="s0">,</span><span class="s1">R.drawable.bmw)</span><span class="s0">;</span>
+        <span class="s1">Bitmap audi= BitmapFactory.decodeResource(getResources()</span><span class="s0">,</span><span class="s1">R.drawable.audi)</span><span class="s0">;</span>
+        <span class="s1">Bitmap ferrari= BitmapFactory.decodeResource(getResources()</span><span class="s0">,</span><span class="s1">R.drawable.black_ferrari)</span><span class="s0">;</span>
+        <span class="s1">Bitmap ford= BitmapFactory.decodeResource(getResources()</span><span class="s0">,</span><span class="s1">R.drawable.blue_ford)</span><span class="s0">;</span>
+        <span class="s1">Bitmap toyota= BitmapFactory.decodeResource(getResources()</span><span class="s0">,</span><span class="s1">R.drawable.yellow_toyota)</span><span class="s0">;</span>
+
+        <span class="s1">Car c1 = </span><span class="s0">new </span><span class="s1">Car(</span><span class="s4">&quot;BMW&quot;</span><span class="s0">,</span><span class="s2">4</span><span class="s0">,</span><span class="s4">&quot;red&quot;</span><span class="s0">,</span><span class="s1">bmw</span><span class="s0">,</span><span class="s2">5</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Car c2 = </span><span class="s0">new </span><span class="s1">Car(</span><span class="s4">&quot;Ferrari&quot;</span><span class="s0">,</span><span class="s2">2</span><span class="s0">,</span><span class="s4">&quot;black&quot;</span><span class="s0">,</span><span class="s1">audi</span><span class="s0">,</span><span class="s2">1</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Car c3 = </span><span class="s0">new </span><span class="s1">Car(</span><span class="s4">&quot;Ford&quot;</span><span class="s0">,</span><span class="s2">6</span><span class="s0">,</span><span class="s4">&quot;blue&quot;</span><span class="s0">,</span><span class="s1">ferrari</span><span class="s0">,</span><span class="s2">6</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Car c4 = </span><span class="s0">new </span><span class="s1">Car(</span><span class="s4">&quot;Toyota&quot;</span><span class="s0">,</span><span class="s2">4</span><span class="s0">,</span><span class="s4">&quot;yellow&quot;</span><span class="s0">,</span><span class="s1">ford</span><span class="s0">,</span><span class="s2">2</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">Car c5 = </span><span class="s0">new </span><span class="s1">Car(</span><span class="s4">&quot;Audi&quot;</span><span class="s0">,</span><span class="s2">4</span><span class="s0">,</span><span class="s4">&quot;green&quot;</span><span class="s0">,</span><span class="s1">toyota</span><span class="s0">,</span><span class="s2">4</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s1">list = </span><span class="s0">new </span><span class="s1">ArrayList&lt;&gt;()</span><span class="s0">;</span>
+        <span class="s1">list.add(c1)</span><span class="s0">;</span>
+        <span class="s1">list.add(c2)</span><span class="s0">;</span>
+        <span class="s1">list.add(c3)</span><span class="s0">;</span>
+        <span class="s1">list.add(c4)</span><span class="s0">;</span>
+        <span class="s1">list.add(c5)</span><span class="s0">;</span>
+
+        <span class="s1">adapter = </span><span class="s0">new </span><span class="s1">CarAdapter(</span><span class="s0">this, </span><span class="s2">0</span><span class="s0">,</span><span class="s2">0</span><span class="s0">,</span><span class="s1">list)</span><span class="s0">;</span>
+        <span class="s1">lvCustom.setAdapter(adapter)</span><span class="s0">;</span>
+   <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>
